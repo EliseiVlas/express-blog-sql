@@ -11,3 +11,4 @@ connection.connect((err) => {
     if (err) throw err;
     console.log("Connection to dadaa");
 });
+module.exports = connection;

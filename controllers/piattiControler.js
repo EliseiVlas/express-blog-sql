@@ -1,23 +1,20 @@
 // importiamo il roputer dei piatti
-const dataPiatti = require('../data/posts');
+const connection = require('../data/db');
 
 // gruppo delle funzione della logica relativa alle rotte delle pizze
 // index
 function index(req, res) {
 
-    //Inizialmente, il menu filtrato corrisponde a quello originale
-    let filteredMenu = dataPiatti;
+    // prepariamo la query
+    const sql = 'SELECT * FROM posts';
 
-    // Se la richiesta contiene un filtro, allora filtriamo il menu
-    if (req.query.tag) {
-        filteredMenu = dataPiatti.filter(
-            piatti => piatti.tags.includes(req.query.tag)
-        );
-    }
-
-    // restituiamo la variabile filteredMenu
-    // potrebbe essere stata filtrata o contenere il menu originale
-    res.json(filteredMenu);
+    // eseguiamo la query!
+    connection.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: 'Database query failed' });
+    res.json(results);
+    console.log(results);
+    
+});
 };
 // show
 function show(req, res) {
@@ -25,24 +22,12 @@ function show(req, res) {
     // recuperiamo l'id dall' URL e trasformiamolo in numero
     const id = parseInt(req.params.id)
 
-    // cerchiamo il piatto tramite id
-    const piatti = dataPiatti.find(piatto => piatto.id === id);
-
-    // Facciamo il controllo
-    if (!piatti) {
-
-        // ritorno lo stato di errore 404, non trovato
-        res.status(404);
-
-        // ritorno un messaggio di errore (formato json)
-        return res.json({
-            error: "Not Found",
-            message: "piatto non trovata"
-        })
-    }
-
-    // Restituiamolo sotto forma di JSON   
-    res.json(piatti);
+    const sql = 'SELECT * FROM posts WHERE id = ?';
+    connection.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: 'Database query failed' });
+    if (results.length === 0) return res.status(404).json({ error: 'Pizza not found' });
+    res.json(results[0]);
+    });
 };
 // store
 function store(req, res) {
