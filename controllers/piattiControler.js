@@ -45,6 +45,7 @@ function show(req, res) {
             piatti.ingredienti = ingredientsResults;
 
     res.json(piatti);
+    
     });
     });
 };
@@ -141,23 +142,13 @@ function modify (req, res){
 function destroy(req, res) {
     // recuperiamo l'id dall' URL e trasformiamolo in numero
     const id = parseInt(req.params.id)
-    // cerchiamo il piatto tramite id
-    const piatti = dataPiatti.find(piatto => piatto.id === id);
-    // Facciamo il controllo
-    if (!piatti) {
-        // ritorno lo stato di errore 404, non trovato
-        res.status(404);
-        // ritorno un messaggio di errore (formato json)
-        return res.json({
-            error: "Not Found",
-            message: "piatto non trovata"
-        })
-    }
-    // cancello il piatto trovato
-    dataPiatti.splice(dataPiatti.indexOf(piatti), 1);
-    // log di riscontro di check su aggiornamento dati
-    console.log(dataPiatti);
-    // ritorno la risposta positiva di avvenuta cancellazione
-    res.sendStatus(204);
+    //Eliminiamo la pizza dal menu
+
+    connection.query('DELETE FROM posts WHERE id = ?', [id], (err) => {
+    if (err) return res.status(500).json({ error: 'Failed to delete pizza' });
+    res.sendStatus(204)
+    console.log();
+    
+    });
 };
 module.exports = { index, show, store, update, modify, destroy }
