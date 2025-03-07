@@ -25,8 +25,27 @@ function show(req, res) {
     const sql = 'SELECT * FROM posts WHERE id = ?';
     connection.query(sql, [id], (err, results) => {
     if (err) return res.status(500).json({ error: 'Database query failed' });
-    if (results.length === 0) return res.status(404).json({ error: 'Pizza not found' });
-    res.json(results[0]);
+    if (results.length === 0) return res.status(404).json({ error: 'piatto not found' });
+
+    const piatti = results[0];
+
+    const ingredientsSql = `
+            SELECT tags.*
+            FROM tags
+            JOIN post_tag ON tags.id = post_tag.tag_id
+            WHERE post_tag.post_id = ?
+            `;
+
+
+        // Se è andata bene, eseguiamo la seconda query per gli ingredienti
+        connection.query(ingredientsSql, [id], (err, ingredientsResults) => {
+            if (err) return res.status(500).json({ error: 'Database query failed' });
+
+            // Aggoiungiamo gli ingredienti alla pizza
+            piatti.ingredienti = ingredientsResults;
+
+    res.json(piatti);
+    });
     });
 };
 // store
