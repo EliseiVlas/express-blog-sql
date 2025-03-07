@@ -1,0 +1,27 @@
+{
+  "name": "express-blog-api-crud",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "watch": "node --watch app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EliseiVlas/express-blog-api-crud.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EliseiVlas/express-blog-api-crud/issues"
+  },
+  "homepage": "https://github.com/EliseiVlas/express-blog-api-crud#readme",
+  "description": "",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mysql2": "^3.13.0"
+  }
+}
